@@ -5,6 +5,8 @@ from geopy.geocoders import MapBox
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.safari.options import Options as SafariOptions
 
 from pipeline import Pipeline, ExtractorFactory, ScraperFactory, SourceFactory, Api
 from config import BROWSER
@@ -16,10 +18,19 @@ def get_driver():
         options = ChromeOptions()
         options.add_argument('--headless')
         return webdriver.Chrome(options=options)
-    else:  # default to Firefox
+    elif BROWSER == "firefox":
         options = FirefoxOptions()
         options.add_argument('--headless')
         return webdriver.Firefox(options=options)
+    elif BROWSER == "msedge":
+        options = EdgeOptions()
+        options.add_argument('--headless')
+        return webdriver.Edge(options=options)
+    elif BROWSER == "safari":
+        options = SafariOptions()
+        return webdriver.Safari(options=options)
+    else:
+        raise ValueError(f"Unsupported browser: {BROWSER}")
 
 def main():
     driver = get_driver()
