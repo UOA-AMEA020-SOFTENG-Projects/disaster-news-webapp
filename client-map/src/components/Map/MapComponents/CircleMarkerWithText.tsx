@@ -12,11 +12,14 @@ const CircleMarkerWithText: React.FC<CircleMarkerWithTextProps> = ({
     text,
 }) => {
     const { updateZoom, updateCenter } = useContext(CenterContext);
+    const number = parseInt(text);
 
     function handleClusterClick() {
         updateCenter(position);
         updateZoom(15);
     }
+
+    const backgroundColor = number < 4 ? "blue" : "red";
 
     return (
         <>
@@ -39,7 +42,7 @@ const CircleMarkerWithText: React.FC<CircleMarkerWithTextProps> = ({
                         style={{
                             width: "45px",
                             height: "45px",
-                            backgroundColor: "red",
+                            backgroundColor,
                             borderRadius: "100%",
                             opacity: 0.5,
                         }}
