@@ -1,9 +1,9 @@
-const admin = require('firebase-admin');
-const serviceAccount = require('./config/p4p-disaster-news-firebase-adminsdk-bj3fv-ff12061545.json');
+import admin from 'firebase-admin';
+import serviceAccount from './config/serviceAccountKey.json';
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
 });
 
 const firestore = admin.firestore();
-module.exports = firestore;
+export default firestore;

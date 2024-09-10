@@ -9,7 +9,8 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "target": "es2017",
-        "module": "commonjs"
+        "module": "commonjs",
+        "resolveJsonModule": true,
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules/*"]
