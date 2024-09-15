@@ -3,6 +3,7 @@ import firestore from '../../firebase';  // Use the initialized Firestore instan
 import { GeoFirestore, GeoCollectionReference } from 'geofirestore';
 import admin from 'firebase-admin';
 
+
 const router = express.Router();
 
 const geoFirestore: GeoCollectionReference = new GeoFirestore(firestore).collection('news');
@@ -20,7 +21,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// GET news near a specific location (geospatial query)
+// GET news near a specific location (geospatial query without binding box)
 router.get("/near", async (req: Request, res: Response) => {
     const { latitude, longitude, proximity } = req.query;
 
@@ -45,53 +46,27 @@ router.get("/near", async (req: Request, res: Response) => {
     }
 });
 
+// GET news within a bounding box (geospatial query with bounding box)
 router.get("/map", async (req: Request, res: Response) => {
     const { south, west, north, east } = req.query;
 
     if (!south || !west || !north || !east) {
-        res.status(400).send("Invalid query parameters");
-        return;
+        return res.status(400).send("Invalid query parameters");
     }
 
     try {
-        const news = await News.find({
-            location: {
-                $geoWithin: {
-                    $geometry: {
-                        type: "Polygon",
-                        coordinates: [
-                            [
-                                [
-                                    parseFloat(west as string),
-                                    parseFloat(south as string),
-                                ],
-                                [
-                                    parseFloat(east as string),
-                                    parseFloat(south as string),
-                                ],
-                                [
-                                    parseFloat(east as string),
-                                    parseFloat(north as string),
-                                ],
-                                [
-                                    parseFloat(west as string),
-                                    parseFloat(north as string),
-                                ],
-                                [
-                                    parseFloat(west as string),
-                                    parseFloat(south as string),
-                                ],
-                            ],
-                        ],
-                    },
-                },
-            },
-        });
+        const snapshot = await firestore.collection('news')
+            .where('location.latitude', '>=', parseFloat(south as string))
+            .where('location.latitude', '<=', parseFloat(north as string))
+            .where('location.longitude', '>=', parseFloat(west as string))
+            .where('location.longitude', '<=', parseFloat(east as string))
+            .get();
 
+        const news = snapshot.docs.map(doc => doc.data());
         res.json(news);
-    } catch (e) {
-        console.error(e);
-        return res.status(500).json({ error: "Server error" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
     }
 });
 
