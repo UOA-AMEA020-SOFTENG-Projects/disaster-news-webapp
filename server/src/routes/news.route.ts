@@ -1,7 +1,12 @@
 import express, { Request, Response } from "express";
 import firestore from '../../firebase';  // Use the initialized Firestore instance
+import { GeoFirestore, GeoCollectionReference } from 'geofirestore';
+import admin from 'firebase-admin';
 
 const router = express.Router();
+
+const geoFirestore: GeoCollectionReference = new GeoFirestore(firestore).collection('news');
+
 
 // GET all news articles
 router.get("/", async (req, res) => {
@@ -15,34 +20,28 @@ router.get("/", async (req, res) => {
     }
 });
 
+// GET news near a specific location (geospatial query)
 router.get("/near", async (req: Request, res: Response) => {
-    const { longitude, latitude, proximity } = req.query;
+    const { latitude, longitude, proximity } = req.query;
 
-    if (!longitude || !latitude) {
-        res.status(400).send("Invalid query parameters");
-        return;
+    if (!latitude || !longitude) {
+        return res.status(400).send("Invalid query parameters");
     }
 
     try {
-        const news = await News.find({
-            location: {
-                $near: {
-                    $geometry: {
-                        type: "Point",
-                        coordinates: [
-                            parseFloat(longitude as string),
-                            parseFloat(latitude as string),
-                        ],
-                    },
-                    $maxDistance: parseInt(proximity as string) || 10000,
-                },
-            },
+        // Use the correct method 'near' for geospatial queries
+        const query = geoFirestore.near({
+            center: new admin.firestore.GeoPoint(parseFloat(latitude as string), parseFloat(longitude as string)),
+            radius: parseInt(proximity as string) || 10  // Radius in kilometers
         });
 
+        const snapshot = await query.get();
+        const news = snapshot.docs.map(doc => doc.data());
+
         res.json(news);
-    } catch (e) {
-        console.error(e);
-        return res.status(500).json({ error: "Server error" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
     }
 });
 
