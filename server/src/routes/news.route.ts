@@ -70,22 +70,26 @@ router.get("/map", async (req: Request, res: Response) => {
     }
 });
 
+// POST create a new news article
 router.post("/", async (req: Request, res: Response) => {
     const { title, body, source, image, location } = req.body;
 
+    if (!title || !body || !source || !location || !location.latitude || !location.longitude) {
+        return res.status(400).send("Missing required fields");
+    }
+
     try {
-        const news = new News({
+        await firestore.collection('news').add({
             title,
             body,
             source,
             image,
-            location,
+            location: new admin.firestore.GeoPoint(location.latitude, location.longitude),
+            createdAt: admin.firestore.FieldValue.serverTimestamp()
         });
-
-        await news.save();
-        return res.status(201).json(news);
-    } catch (e) {
-        console.error(e);
+        return res.status(201).json({ message: 'News article created!' });
+    } catch (error) {
+        console.error(error);
         return res.status(500).json({ error: "Server error" });
     }
 });
