@@ -1,15 +1,17 @@
 import express, { Request, Response } from "express";
-import { News } from "../models";
+import firestore from '../../firebase';  // Use the initialized Firestore instance
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+// GET all news articles
+router.get("/", async (req, res) => {
     try {
-        const news = await News.find();
-        res.send(news);
-    } catch (e) {
-        console.error(e);
-        return res.status(500).json({ error: "Server error" });
+        const snapshot = await firestore.collection('news').get();
+        const news = snapshot.docs.map(doc => doc.data());
+        res.json(news);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
     }
 });
 
