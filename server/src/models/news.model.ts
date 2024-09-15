@@ -1,41 +1,16 @@
-import mongoose, { Schema, Document } from "mongoose";
+import admin from 'firebase-admin';
 
-export interface INews extends Document {
+// Import Firestore types (can probably remove this import, its unused)
+import { Firestore } from 'firebase-admin/firestore';
+
+export interface INews {
     title: string;
     body: string;
     source: string;
-    image: string;
+    image?: string;
     location: {
-        type: string;
-        coordinates: number[];
+        latitude: number;
+        longitude: number;
     };
+    createdAt?: admin.firestore.Timestamp;  // Using the Firestore type for timestamps
 }
-
-const PointSchema: Schema = new mongoose.Schema({
-    type: {
-        type: String,
-        enum: ["Point"],
-        required: true,
-    },
-    coordinates: {
-        type: [Number],
-        required: true,
-    },
-});
-
-const NewsSchema: Schema = new Schema(
-    {
-        title: { type: String, required: true },
-        body: { type: String, required: true },
-        source: { type: String, required: true },
-        image: { type: String, required: false },
-        location: {
-            type: PointSchema,
-            index: "2dsphere",
-            required: true,
-        },
-    },
-    { timestamps: true }
-);
-
-export default mongoose.model<INews>("News", NewsSchema);
