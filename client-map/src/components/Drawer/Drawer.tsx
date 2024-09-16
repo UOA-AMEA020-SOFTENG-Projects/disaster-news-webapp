@@ -1,7 +1,8 @@
 import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import HomeIcon from "@mui/icons-material/Home";
+
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useContext, useEffect, useRef, useState } from "react";
 import { DrawerContext } from "../../contexts/DrawerContext";
@@ -17,8 +18,7 @@ type DrawerPropsType = {
 };
 
 export function Drawer({ news }: DrawerPropsType) {
-    const { isDrawerOpen, toggleDrawer, loading, updateLoading } =
-        useContext(DrawerContext);
+    const { isDrawerOpen, toggleDrawer, loading, updateLoading } = useContext(DrawerContext);
     const { selectedNews } = useContext(SelectedNewsContext);
     const [readMoreClicked, setReadMoreClicked] = useState<boolean>(false);
     const cardsContainerRef = useRef(null);
@@ -64,135 +64,95 @@ export function Drawer({ news }: DrawerPropsType) {
     }, [selectedNews, newsProcessing]);
 
     const handlers = useSwipeable({
-        onSwipedUp: () => {
+        onSwipedLeft: () => {
             toggleDrawer(true);
         },
-        onSwipedDown: () => {
+        onSwipedRight: () => {
             toggleDrawer(false);
         },
     });
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                position: "relative",
-                overflow: "hidden",
-            }}
+<Box
+    sx={{
+        display: "flex",
+        flexDirection: "column",
+        position: "fixed",  // Fixed to the screen
+        top: 0,
+        left: 0,  // Drawer header always stays visible
+        width: "300px",  // Fixed width of the drawer
+        height: "100vh",  // Full height of the viewport
+        backgroundColor: "#00026E",
+        boxShadow: "2px 0px 10px rgba(0, 0, 0, 0.3)",  // Shadow effect when open
+        zIndex: 10,  // Ensure it's on top
+        overflow: "hidden",  // Prevent content from overflowing
+    }}
+>
+    {/* Drawer Header with "Latest Stories" and Toggle Button */}
+    <Box
+        sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "8px",
+            backgroundColor: "primary",
+            height: "70px",
+        }}
+    >
+        <Typography variant="h6" color="white">
+            Latest Stories
+        </Typography>
+
+        {/* Arrow Button to Toggle Drawer Content Visibility */}
+        <IconButton
+            onClick={() => toggleDrawer(!isDrawerOpen)}  // Toggle drawer content visibility
         >
-            <Box
-                sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "8px",
-                    backgroundColor: "primary.main",
-                    height: "70px",
-                    boxSizing: "border-box",
-                    zIndex: "10",
-                }}
-                {...handlers}
-            >
-                <Typography
-                    variant="h1"
-                    color="white"
-                    sx={{ marginLeft: "6px" }}
-                >
-                    {readMoreClicked ? "DETAILS" : "LATEST STORIES"}
-                </Typography>
-                {readMoreClicked ? (
-                    <IconButton onClick={() => setReadMoreClicked(false)}>
-                        <ArrowBackIcon
-                            fontSize="large"
-                            sx={{ color: "white" }}
-                        />
-                    </IconButton>
-                ) : isDrawerOpen ? (
-                    <IconButton onClick={() => toggleDrawer(false)}>
-                        <KeyboardArrowDownIcon
-                            fontSize="large"
-                            sx={{ color: "white" }}
-                        />
-                    </IconButton>
-                ) : (
-                    <IconButton onClick={() => toggleDrawer(true)}>
-                        <KeyboardArrowUpIcon
-                            fontSize="large"
-                            sx={{ color: "white" }}
-                        />
-                    </IconButton>
-                )}
-            </Box>
+            {isDrawerOpen ? (
+                <KeyboardArrowLeftIcon fontSize="large" sx={{ color: "white" }} />
+            ) : (
+                <KeyboardArrowRightIcon fontSize="large" sx={{ color: "white" }} />
+            )}
+        </IconButton>
+    </Box>
 
-            <Box
-                sx={{
-                    height: isDrawerOpen
-                        ? "calc(100svh - 70px - 70px - 25svh)"
-                        : "0px",
-                    overflow: "scroll",
-                    transition: "height 0.3s ease-in-out",
-                    boxSizing: "border-box",
-                    width: "100%",
-                }}
-            >
-                <Box
-                    ref={cardsContainerRef}
-                    sx={{
-                        display: isMobile ? "flex" : "grid",
-                        gridTemplateColumns: "auto auto auto",
-                        flexDirection: "column",
-                        gap: "8px",
-                        boxSizing: "border-box",
-                        padding: "16px",
-                        height: "100%",
-                        backgroundColor: "white",
-                        overflow: "scroll",
-                    }}
-                >
-                    {news.length == 0 && (
-                        <Typography>Nothing to see here</Typography>
-                    )}
+    {/* Drawer Content that Slides In/Out */}
+    <Box
+        ref={cardsContainerRef}
+        sx={{
+            width: isDrawerOpen ? "300px" : "0px",  // Slide content in/out
+            transition: "width 0.3s ease-in-out", 
+            overflowY: "scroll",  // Allow scroll for news items (TODO: REMOVE ONCE SCROLL ARROW STARTS WORKING)
+            paddingBottom: "40px",  // Add space for the arrow
 
-                    {news.every((markerArray) => markerArray.length > 1) &&
-                        news.length > 0 && (
-                            <Typography>
-                                Zoom in or click on the clusters
-                            </Typography>
-                        )}
+        }}
+    >
+        {news.length === 0 && <Typography>No news available</Typography>}
+        {uniqueNews.map((newsItem) => (
+            <NewsCard
+                key={newsItem.id}
+                newsMarker={newsItem}
+                setReadMoreClicked={setReadMoreClicked}
+                idMap={idMap}
+            />
+        ))}
+    </Box>
+        {/* Scroll Arrow */}
+        <Box
+        sx={{
+            position: "absolute",
+            bottom: "10px",  // Positioning the arrow at the bottom
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+        }}
+    >
+        <IconButton>
+            <KeyboardArrowDownIcon fontSize="large" sx={{ color: "white" }} />
+        </IconButton>
+    </Box>
 
-                    {uniqueNews.map((news) => {
-                        return (
-                            <NewsCard
-                                key={news.id}
-                                newsMarker={news}
-                                setReadMoreClicked={setReadMoreClicked}
-                                idMap={idMap}
-                            />
-                        );
-                    })}
-                </Box>
-            </Box>
+</Box>
 
-            <Box
-                sx={{
-                    backgroundColor: "white",
-                    height: isDrawerOpen
-                        ? "calc(100svh - 70px - 25svh)"
-                        : "0px",
-                    width: "100%",
-                    right: readMoreClicked ? "0" : "-100%",
-                    transition: "right 0.3s ease-in-out",
-                    boxSizing: "border-box",
-                    overflow: "scroll",
-                    position: "absolute",
-                }}
-            >
-                <div className="placeholder" style={{ height: "70px" }}></div>
-                <NewsPage newsMarker={selectedNews} />
-            </Box>
-        </Box>
+
     );
 }
