@@ -31,6 +31,8 @@ export function Drawer({ news }: DrawerPropsType) {
     const [newsProcessing, setNewsProcessing] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0); // Track current index
     const itemsPerPage = 2; // Number of articles shown per 'page' in sidebar
+    const [scrollPosition, setScrollPosition] = useState(0);  // For smooth transition between articles
+
 
     // Populate uniqueNews from the news prop on mount (assuming news is passed as a prop)
     useEffect(() => {
@@ -40,12 +42,14 @@ export function Drawer({ news }: DrawerPropsType) {
 
     const handleNext = () => {
         if (currentIndex + itemsPerPage < uniqueNews.length) {
+            setScrollPosition(scrollPosition - 100);  // Adjusting scroll position by 100% (for the transition)
             setCurrentIndex(currentIndex + itemsPerPage);
         }
     };
 
     const handlePrev = () => {
         if (currentIndex - itemsPerPage >= 0) {
+            setScrollPosition(scrollPosition + 100);  // Adjust scroll position up by 100% (for the transition)
             setCurrentIndex(currentIndex - itemsPerPage);
         }
     };
@@ -154,19 +158,27 @@ export function Drawer({ news }: DrawerPropsType) {
                     position: "relative",
                 }}
             >
+                <Box
+                    sx={{
+                        transition: "transform 0.5s ease-in-out", // Smooth transition
+                        transform: `translateY(${scrollPosition}%)`, // Move up or down
+                    }}
+                ></Box>
                 {news.length === 0 && (
                     <Typography>No news available</Typography>
                 )}
-                {uniqueNews.slice(currentIndex, currentIndex + itemsPerPage).map((newsItem) => (
-                    <NewsCard
-                        key={newsItem.id}
-                        newsMarker={newsItem}
-                        setReadMoreClicked={setReadMoreClicked}
-                        idMap={idMap}
-                    />
-                ))}
+                {uniqueNews
+                    .slice(currentIndex, currentIndex + itemsPerPage)
+                    .map((newsItem) => (
+                        <NewsCard
+                            key={newsItem.id}
+                            newsMarker={newsItem}
+                            setReadMoreClicked={setReadMoreClicked}
+                            idMap={idMap}
+                        />
+                    ))}
             </Box>
-            
+
             {/* Arrow to Scroll To Next Set of Articles */}
             <Box
                 sx={{
