@@ -34,22 +34,21 @@ export function Drawer({ news }: DrawerPropsType) {
     const [scrollPosition, setScrollPosition] = useState(0);  // For smooth transition between articles
 
 
+
     // Populate uniqueNews from the news prop on mount (assuming news is passed as a prop)
     useEffect(() => {
-        const uniqueArticles = news.flat().slice(); // Assuming news is an array of arrays
+        const uniqueArticles = news.flat().slice(); // Given that news is an array of arrays
         setUniqueNews(uniqueArticles);
     }, [news]);
 
     const handleNext = () => {
         if (currentIndex + itemsPerPage < uniqueNews.length) {
-            setScrollPosition(scrollPosition - 100);  // Adjusting scroll position by 100% (for the transition)
             setCurrentIndex(currentIndex + itemsPerPage);
         }
     };
 
     const handlePrev = () => {
         if (currentIndex - itemsPerPage >= 0) {
-            setScrollPosition(scrollPosition + 100);  // Adjust scroll position up by 100% (for the transition)
             setCurrentIndex(currentIndex - itemsPerPage);
         }
     };
@@ -109,7 +108,6 @@ export function Drawer({ news }: DrawerPropsType) {
                 width: "300px", // Fixed width of the drawer
                 height: "100vh", // Full height of the viewport
                 backgroundColor: "#00026E",
-                boxShadow: "2px 0px 10px rgba(0, 0, 0, 0.3)", // Shadow effect when open
                 zIndex: 10, // Ensure it's on top
                 overflow: "hidden", // No visible scroll
             }}
@@ -123,15 +121,18 @@ export function Drawer({ news }: DrawerPropsType) {
                     padding: "8px",
                     backgroundColor: "primary",
                     height: "70px",
+
                 }}
             >
-                <Typography variant="h6" color="white">
-                    Latest Stories
-                </Typography>
+    <Typography variant="h6" color="white" sx={{ flexGrow: 1, textAlign: "center" }}>
+        Latest Stories
+    </Typography>
 
                 {/* Arrow Button to Toggle Drawer Content Visibility */}
                 <IconButton
                     onClick={() => toggleDrawer(!isDrawerOpen)} // Toggle drawer content visibility
+                    sx={{ marginLeft: "auto" }}  // Ensure the button stays on the far right
+
                 >
                     {isDrawerOpen ? (
                         <KeyboardArrowLeftIcon

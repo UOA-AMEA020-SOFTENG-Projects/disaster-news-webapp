@@ -41,7 +41,7 @@ export function NewsCard({
         display: "flex",
         flexDirection: "column",
         padding: "15px",  // Add padding
-        backgroundColor: "#f5f5dc",  // Match background color to white
+        backgroundColor: "#fff",  // Match background color to white
         boxSizing: "border-box",
         width: "90%",
         border: selectedNews && idMap && idMap.get(selectedNews.id) === newsMarker.id
@@ -51,17 +51,18 @@ export function NewsCard({
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",  // Added shadow
         marginBottom: "25px",  // Space between news cards
         cursor: "pointer",
+
     }}
 >
     <img
-        style={{ width: "100%", height: "100%", objectFit: "fill", borderRadius: "8px" }}
+        style={{ width: "100%", height: "100%", objectFit: "fill", borderRadius: "8px", fontFamily: "Inter, sans-serif" }}
         src={newsMarker.image}
     />
     <Box sx={{ paddingTop: "10px" }}>
-        <Typography variant="body1" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+        <Typography variant="body1" sx={{ fontWeight: "bold", marginBottom: "10px", fontFamily: "Inter, sans-serif", align: "center" }}>
             {newsMarker.title}
         </Typography>
-        <Typography variant="body2" sx={{ color: "#666666" }}>
+        <Typography variant="body2" sx={{ color: "#666666", fontFamily: "Inter, sans-serif", align: "center" }}>
             {newsMarker.subtitle}
         </Typography>
     </Box>
