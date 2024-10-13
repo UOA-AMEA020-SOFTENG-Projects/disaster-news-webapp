@@ -44,6 +44,23 @@ export function NewsMarker({ newsMarker }: NewsMarkerProps) {
 
     const isSelected = selectedNews?.id === newsMarker.id;
 
+        // Determine marker color based on severity
+        let markerColor;
+        switch (newsMarker.severity) {
+            case "Low":
+                markerColor = "#00FF00";  // Green
+                break;
+            case "Medium":
+                markerColor = "#FFFF00";  // Yellow
+                break;
+            case "High":
+                markerColor = "#FF0000";  // Red
+                break;
+            default:
+                markerColor = "#f7726d";  // Default color
+                break;
+        }
+
     return (
         <MarkerF
             zIndex={isSelected ? 1000 : 10}
