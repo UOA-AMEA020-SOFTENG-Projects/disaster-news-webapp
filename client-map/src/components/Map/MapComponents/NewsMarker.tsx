@@ -45,19 +45,19 @@ export function NewsMarker({ newsMarker }: NewsMarkerProps) {
     const isSelected = selectedNews?.id === newsMarker.id;
 
         // Determine marker color based on severity
-        let markerColor;
+        let markerColour;
         switch (newsMarker.severity) {
             case "Low":
-                markerColor = "#00FF00";  // Green
+                markerColour = "#00FF00";  // green
                 break;
             case "Medium":
-                markerColor = "#FFFF00";  // Yellow
+                markerColour = "#FFFF00";  // yellow
                 break;
             case "High":
-                markerColor = "#FF0000";  // Red
+                markerColour = "#FF0000";  // red
                 break;
             default:
-                markerColor = "#f7726d";  // Default color
+                markerColour = "#f7726d";  // Default color for unknown severity (light red)
                 break;
         }
 
@@ -69,7 +69,7 @@ export function NewsMarker({ newsMarker }: NewsMarkerProps) {
             onClick={handleMarkerClick}
             icon={{
                 path: "M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z",
-                fillColor: isSelected ? "#000000" : "#f7726d",
+                fillColor: isSelected ? "#000000" : markerColour,
                 fillOpacity: 1,
             }}
         />
