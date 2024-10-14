@@ -1,16 +1,25 @@
-# Part IV Project
-- Title: Analysis of News Sources to Provide Localised Disaster Information
-- Researchers: Ishaan Bhide and Matthew Ouyang
-
-## Summary
-Effective information delivery is crucial, particularly in high-stress disaster situations. Current disaster information systems, including social media, news websites, specially designed software, and emergency alert systems, often lack standardisation, accessibility, and usability. Many of these tools do not offer a visually intuitive experience. For this research project, we created two prototypes—a map-based disaster news application and a newsfeed-based counterpart by leveraging modern technologies such as React, Express, and Python. Our primary objective of this project was to explore how users perceive the usability of a map-based disaster information system and its ability to communicate disaster news compared to a conventional newsfeed system.
-
 ## Repository Details
 - `./client-map` folder contains the React repository for the map-based disaster news app
 - `./client-newsfeed` folder contains the React repository for the newsfeed-based disaster news app
 - `./server` folder contains the Express repository for the backend API consumed by both client apps
-- `./webscraper` folder contains the Python microservice pipeline for webscraping and processing news data from the internet
-- `./statistics` folder contains the Jupyter notebook for the statistical analysis of our research results
+- `./webscraper` folder contains the Python microservice pipeline for webscraping and processing news data from the internet. This has now been made obsolete, but remains within the codebase as an artifact, in the case it should be revived in the future.
+
+## Running The Project
+While the seperate sections of the project do have their own README's, this section provides a simple overview to get started running the application.
+
+Open 3 integrated terminals - one in the client-newsfeed folder, one in the client-map folder, and one in the server folder. Following this, run the command 
+
+```bash
+npm i
+```
+to install all relevant dependencies. Following this, in the server folder, run 
+
+```bash
+npm run dev
+```
+
+to start up the server. Once the terminal displays the message 'Database connected!', run the same command above in each of the client-newsfeed and client-map terminals. This will then provide two local host links, which can be copied and pasted in your browser to access them!
+
 
 ## Docker
 
