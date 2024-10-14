@@ -1,4 +1,13 @@
 body {
     margin: 0;
-    background-color: black;
+    background-color: #00026E;
+    overflow: hidden; // janky way to stop anything from being 'scrollable'
 }
+
+* {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+

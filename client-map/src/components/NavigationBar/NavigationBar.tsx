@@ -38,7 +38,7 @@ export function NavigationBar({ news }: NavigationBarPropsType) {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                backgroundColor: "primary.main",
+                backgroundColor: "#00026E",
                 padding: "8px",
                 height: "70px",
                 width: "100%",

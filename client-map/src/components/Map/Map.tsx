@@ -103,6 +103,8 @@ export function Map({ news, setNews }: MapPropsType) {
                 position: "relative",
                 display: "flex",
                 justifyContent: "center",
+                height: "100vh",
+                overflow: "hidden",
             }}
         >
             {loading && !mapLoading && (
