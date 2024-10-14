@@ -174,7 +174,7 @@ export function Drawer({ news }: DrawerPropsType) {
                         <NewsCard
                             key={newsItem.id}
                             newsMarker={newsItem}
-                            setReadMoreClicked={setReadMoreClicked}
+                            setReadMoreClicked={() => setReadMoreClicked(true)}  // Ensure this updates to true on click
                             idMap={idMap}
                         />
                     ))}

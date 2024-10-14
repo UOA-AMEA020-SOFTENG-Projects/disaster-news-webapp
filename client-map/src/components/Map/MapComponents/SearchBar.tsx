@@ -43,7 +43,7 @@ const response = await fetch(
   };
 
   return (
-    <Box sx={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
+    <Box sx={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
       <TextField
         variant="outlined"
         label="Search"
