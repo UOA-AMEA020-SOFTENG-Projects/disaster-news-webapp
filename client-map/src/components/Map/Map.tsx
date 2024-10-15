@@ -228,6 +228,7 @@ export function Map({ news, setNews }: MapPropsType) {
                         <UserLocationMarker />
 
                         {news.map((markerArray) => {
+                            {console.log(news)}
                             if (markerArray.length == 1) {
                                 return (
                                     <NewsMarker
