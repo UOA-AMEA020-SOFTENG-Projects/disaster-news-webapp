@@ -3,7 +3,7 @@ import { Map } from "./components/Map/Map";
 import { Drawer } from "./components/Drawer/Drawer";
 import { CenterContext } from "./contexts/CenterContext";
 import { useContext, useEffect, useState } from "react";
-import { getMapAreaDisasterNews } from "./api/news";
+import { getMapAreaDisasterNews, getMapAreaDisasterNewsTest } from "./api/news";
 import { NewsItem } from "./models/NewsItem";
 import { DrawerContext } from "./contexts/DrawerContext";
 import { mapNewsArticles } from "./utils/mapNewsArticles";
@@ -17,6 +17,8 @@ export default function App() {
     useEffect(() => {
         async function fetchDisasterNews() {
             const disasterNews = await getMapAreaDisasterNews(mapBounds);
+            const testing = await getMapAreaDisasterNewsTest(mapBounds);
+            console.log(testing)
             mapNewsArticles({
                 disasterNews: disasterNews,
                 setNews: setNews,

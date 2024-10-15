@@ -43,3 +43,24 @@ export async function getMapAreaDisasterNews({
         console.error(error);
     }
 }
+
+export async function getMapAreaDisasterNewsTest({
+    south,
+    west,
+    north,
+    east,
+}: MapBounds) {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/news/map-test`, {
+            params: {
+                south: south,
+                west: west,
+                north: north,
+                east: east,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
