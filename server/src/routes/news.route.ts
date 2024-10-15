@@ -145,6 +145,39 @@ router.get("/map", async (req: Request, res: Response) => {
     }
 });
 
+// router.get("/map-test", async (req: Request, res: Response) => {
+//     const { south, west, north, east } = req.query;
+  
+//     if (!south || !west || !north || !east) {
+//       res.status(400).send("Invalid query parameters");
+//       return;
+//     }
+  
+//     try {
+//       const news = await News1.find({
+//         'location_coords': {
+//           $geoWithin: {
+//             $geometry: {
+//               type: "Polygon",
+//               coordinates: [[
+//                 [parseFloat(west as string), parseFloat(south as string)],
+//                 [parseFloat(east as string), parseFloat(south as string)],
+//                 [parseFloat(east as string), parseFloat(north as string)],
+//                 [parseFloat(west as string), parseFloat(north as string)],
+//                 [parseFloat(west as string), parseFloat(south as string)]
+//               ]]
+//             }
+//           }
+//         }
+//       });
+  
+//       res.json(news);
+//     } catch (e) {
+//       console.error(e);
+//       return res.status(500).json({ error: "Server error" });
+//     }
+//   });
+
 router.get("/map-test", async (req: Request, res: Response) => {
     const { south, west, north, east } = req.query;
   
@@ -154,19 +187,23 @@ router.get("/map-test", async (req: Request, res: Response) => {
     }
   
     try {
+      // Define the polygon with the provided bounds
+      const polygon = {
+        type: "Polygon",
+        coordinates: [[
+          [parseFloat(west as string), parseFloat(south as string)],
+          [parseFloat(east as string), parseFloat(south as string)],
+          [parseFloat(east as string), parseFloat(north as string)],
+          [parseFloat(west as string), parseFloat(north as string)],
+          [parseFloat(west as string), parseFloat(south as string)]
+        ]]
+      };
+  
+      // Find documents where any point in 'location_coords' intersects the polygon
       const news = await News1.find({
         'location_coords': {
-          $geoWithin: {
-            $geometry: {
-              type: "Polygon",
-              coordinates: [[
-                [parseFloat(west as string), parseFloat(south as string)],
-                [parseFloat(east as string), parseFloat(south as string)],
-                [parseFloat(east as string), parseFloat(north as string)],
-                [parseFloat(west as string), parseFloat(north as string)],
-                [parseFloat(west as string), parseFloat(south as string)]
-              ]]
-            }
+          $geoIntersects: {
+            $geometry: polygon
           }
         }
       });

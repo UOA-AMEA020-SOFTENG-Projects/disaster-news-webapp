@@ -26,13 +26,15 @@ export function mapNewsArticles({
           lastUpdated: news.summary.last_updated,
           image: news.images[0],
           severity : news.summary.severity,
-          location: news.location_coords.coordinates,
+          location: news.location_coords.coordinates, // as 2D array
           endDate: news.summary.end_date,
           startDate: news.summary.start_date,
           recActions: news.summary.recommended_actions,
         };
     });
 
+        // 2D array --> [[1,2], [3,4]]
+        // 
 
         const newsArr: NewsItem[][] = [];
         modifiedNews.map((mNews : any) => {
@@ -60,6 +62,12 @@ export function mapNewsArticles({
             })
         });
         console.log(newsArr)
-        setNews(newsArr);
+        if(zoom > 3){
+            setNews(newsArr);
+        }
+        else{
+            const groupedNews = groupObjectsByProximity(modifiedNews, proximity);
+            setNews(groupedNews);
+        }
     
 }

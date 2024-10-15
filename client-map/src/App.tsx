@@ -18,6 +18,7 @@ export default function App() {
         async function fetchDisasterNews() {
             const disasterNews = await getMapAreaDisasterNews(mapBounds);
             // console.log(disasterNews)
+            console.log(mapBounds)
             const testing = await getMapAreaDisasterNewsTest(mapBounds);
             console.log(testing)
             mapNewsArticles({
