@@ -14,29 +14,52 @@ export function mapNewsArticles({
     zoom,
     proximity,
 }: MapNewsArticlesProps) {
-    const modifiedNews: NewsItem[] = disasterNews.map((news: any) => {
+    console.log(disasterNews)
+    console.log("runs")
+    const modifiedNews: any = disasterNews.map((news: any) => {
         return {
-            id: news._id,
-            title: news.title,
-            description: news.body,
-            source: news.source,
-            image: news.image,
-            location: {
-                lat: news.location.coordinates[1],
-                lng: news.location.coordinates[0],
-            },
-            createdAt: news.createdAt,
+        id: news._id,
+          title: news.headline,
+          summary: news.summary.summary_of_event_paragraphs,
+          description: news.summary.summary_of_event,
+          source: news.articles[0],
+          lastUpdated: news.summary.last_updated,
+          image: news.images[0],
+          severity : news.summary.severity,
+          location: news.location_coords.coordinates,
+          endDate: news.summary.end_date,
+          startDate: news.summary.start_date,
+          recActions: news.summary.recommended_actions,
         };
     });
 
-    if (zoom > 14) {
+
         const newsArr: NewsItem[][] = [];
-        modifiedNews.map((mNews) => {
-            newsArr.push([mNews]);
+        modifiedNews.map((mNews : any) => {
+            mNews.location.map((locs : number[]) => {
+                console.log(mNews)
+                const mod : NewsItem = {
+                    id: mNews._id,
+                    title: mNews.title,
+                    summary: mNews.summary,
+                    description: mNews.description,
+                    source: mNews.source,
+                    lastUpdated: mNews.lastUpdated,
+                    image: mNews.image,
+                    severity: mNews.severity,
+                    endDate: mNews.endDate,
+                    startDate: mNews.startDate,
+                    recActions: mNews.recActions,
+                    location: {
+                        lat: locs[1], 
+                        lng: locs[0],
+                    },
+                    categories: []
+                }
+                newsArr.push([mod]);
+            })
         });
+        console.log(newsArr)
         setNews(newsArr);
-    } else {
-        const groupedNews = groupObjectsByProximity(modifiedNews, proximity);
-        setNews(groupedNews);
-    }
+    
 }

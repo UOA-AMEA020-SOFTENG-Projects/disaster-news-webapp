@@ -17,11 +17,11 @@ export default function App() {
     useEffect(() => {
         async function fetchDisasterNews() {
             const disasterNews = await getMapAreaDisasterNews(mapBounds);
-            console.log(disasterNews)
+            // console.log(disasterNews)
             const testing = await getMapAreaDisasterNewsTest(mapBounds);
             console.log(testing)
             mapNewsArticles({
-                disasterNews: disasterNews,
+                disasterNews: testing,
                 setNews: setNews,
                 zoom: zoom,
                 proximity: proximity,

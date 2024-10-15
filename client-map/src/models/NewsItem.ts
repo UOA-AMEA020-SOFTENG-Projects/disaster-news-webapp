@@ -12,6 +12,6 @@ export interface NewsItem {
     title: string,
     image: string,
     source: string,
-    location: string[],
+    location: Coordinates,
     lastUpdated: string,
 }
